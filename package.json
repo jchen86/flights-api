@@ -17,15 +17,15 @@
   "author": "Jimmy Chen",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.17.2",
-    "express": "^4.15.3"
-  },
-  "devDependencies": {
     "babel-cli": "^6.9.0",
     "babel-core": "^6.9.0",
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-stage-0": "^6.5.0",
     "babel-register": "^6.24.1",
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3"
+  },
+  "devDependencies": {
     "jasmine": "^2.6.0",
     "nodemon": "^1.11.0",
     "request": "^2.81.0"
