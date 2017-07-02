@@ -1,13 +1,11 @@
 import exampleRequest from '../../../examples/example-request.json';
-import flightsService from '../../../src/api/flights/flightsService';
+import server from '../../../src/index';
+import request from 'request';
+
+const endpoint = 'http://localhost:3000/flights';
 
 describe('flightsService', () => {
-    let req, res;
-
-    beforeEach(() => {
-        req = {body: exampleRequest};
-        res = jasmine.createSpyObj('res', ['json']);
-    });
+    let response;
 
     describe('filtering flights', () => {
 
@@ -15,16 +13,19 @@ describe('flightsService', () => {
             const expectedFlights = ['QF564', 'QF457', 'QF490', 'QF735', 'QF738', 'QF435', 'QF542'];
             Object.seal(expectedFlights);
 
-            beforeEach(() => {
-                flightsService.filterFlights(req, res);
+            beforeEach((done) => {
+                request.post(endpoint, {json: true, body: exampleRequest}, function (err, res) {
+                    response = res;
+                    done();
+                });
             });
 
-            it('should return a json response', () => {
-                expect(res.json.calls.count()).toEqual(1);
+            it('should return a 200 response code', () => {
+                expect(response.statusCode).toEqual(200);
             });
 
             it('should return those that are not a codeshare flight, and arrive or depart in SYD', () => {
-                let filteredFlights = res.json.calls.mostRecent().args[0].flights;
+                let filteredFlights = response.body.flights;
                 expect(filteredFlights.map((flight) => flight.flight)).toEqual(expectedFlights);
             });
 
@@ -32,7 +33,7 @@ describe('flightsService', () => {
                 let actualFlights;
 
                 beforeEach(() => {
-                    actualFlights = res.json.calls.mostRecent().args[0].flights;
+                    actualFlights = response.body.flights;
                 });
 
                 it('should have a flight field, which is a concatnation of airline and flightNumber e.g. QF404', () => {
@@ -61,11 +62,29 @@ describe('flightsService', () => {
         });
 
         describe('if invalid JSON is provided', () => {
-
-            it('should return an error with an appropriate HTTP response code and a JSON response', () => {
-                // TODO
+            it('should return an error with an appropriate HTTP response code and a JSON response', (done) => {
+                request.post(endpoint, {json: true, body: "Un-parsable JSON"}, function (error, response) {
+                    expect(response.statusCode).toEqual(400);
+                    expect(response.body).toEqual({
+                        "error": "Error parsing JSON",
+                    });
+                    done();
+                });
             });
+
         });
+
+        describe('if body.flights is missing from request JSON', () => {
+            it('should return an error with an appropriate HTTP response code and a JSON response', (done) => {
+                request.post(endpoint, {json: true, body: {randomKey: []}}, function (error, response) {
+                    expect(response.statusCode).toEqual(400);
+                    expect(response.body).toEqual({
+                        "error": "Error parsing JSON",
+                    });
+                    done();
+                });
+            });
+        })
 
     });
 

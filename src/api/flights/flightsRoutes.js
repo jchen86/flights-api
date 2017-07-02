@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import flightsController from './flightsService';
+import flightsService from './flightsService';
 
 export default () => {
     let api = Router();
 
-    api.post('/', flightsController.filterFlights);
+    api.post('/', flightsService.filterFlights);
 
     return api;
 };

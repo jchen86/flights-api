@@ -27,6 +27,7 @@
     "babel-preset-stage-0": "^6.5.0",
     "babel-register": "^6.24.1",
     "jasmine": "^2.6.0",
-    "nodemon": "^1.11.0"
+    "nodemon": "^1.11.0",
+    "request": "^2.81.0"
   }
 }
