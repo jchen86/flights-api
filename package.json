@@ -29,5 +29,8 @@
     "jasmine": "^2.6.0",
     "nodemon": "^1.11.0",
     "request": "^2.81.0"
+  },
+  "engines": {
+    "node": "8.1.4"
   }
 }
